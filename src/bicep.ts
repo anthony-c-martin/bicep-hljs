@@ -1,9 +1,56 @@
 import * as highlight from 'highlight.js';
 
+const COMMENTS = {
+  className: "comment",
+  variants: [
+    highlight.C_BLOCK_COMMENT_MODE,
+    highlight.C_LINE_COMMENT_MODE
+  ]
+};
+
+const KEYWORDS = {};
+
+const SUBST: Mode = {
+  className: 'subst',
+  begin: '\\$\\{',
+  end: '\\}',
+  keywords: KEYWORDS,
+  contains: [], // defined later
+};
+
+const STRING: Mode = {
+  className: 'string',
+  begin: '\'',
+  end: '\'',
+  contains: [
+    highlight.BACKSLASH_ESCAPE,
+    SUBST,
+  ],
+}
+const SUBST_INTERNALS = [
+  highlight.APOS_STRING_MODE,
+  highlight.QUOTE_STRING_MODE,
+  STRING,
+];
+
+SUBST.contains = [
+  ...SUBST_INTERNALS,
+  {
+    // we need to pair up {} inside our subst to prevent
+    // it from ending too early by matching another }
+    begin: /\{/,
+    end: /\}/,
+    keywords: KEYWORDS,
+    contains: [
+      "self",
+      ...SUBST_INTERNALS
+    ],
+  }
+];
+
 export default function(hljs: typeof highlight): Language {
-  var HASH_COMMENT_MODE = hljs.COMMENT('#', '$');
   return {
-    aliases: ['robotstxt', 'robots.txt'],
+    aliases: ['bicep'],
     case_insensitive: true,
     keywords: {
       $pattern: /[a-z-]+/,
@@ -12,28 +59,8 @@ export default function(hljs: typeof highlight): Language {
       keyword: 'crawl-delay sitemap'
     },
     contains: [
-      HASH_COMMENT_MODE,
-      hljs.NUMBER_MODE,
-      {
-        className: 'string',
-        begin: '^\\s*(?:user-agent|(?:dis)?allow)\\s*:\\s*',
-        end: /$/,
-        excludeBegin: true,
-        relevance: 10,
-        contains: [
-          HASH_COMMENT_MODE
-        ]
-      },
-      {
-        className: 'string',
-        begin: '^\\s*sitemap\\s*:\\s*',
-        end: /$/,
-        excludeBegin: true,
-        contains: [
-          HASH_COMMENT_MODE
-        ]
-      }
+      COMMENTS,
+      STRING,
     ],
-    illegal: '<(?:!DOCTYPE\\s+)?html>'
   }
 }

@@ -5,117 +5,117 @@
   </head>
   <body>
     <pre class="hljs">
-// test
-/* test <span class="hljs-number">2</span> */
-targetScope = &#x27;resourceGroup&#x27;
+<span class="hljs-comment">// test</span>
+<span class="hljs-comment">/* test 2 */</span>
+targetScope = <span class="hljs-string">&#x27;resourceGroup&#x27;</span>
 
-resource avcsdd &#x27;Microsoft.Cache/redis@<span class="hljs-number">2020</span>-<span class="hljs-number">06</span>-<span class="hljs-number">01</span>&#x27; = { // line comment
-  name: &#x27;def&#x27; /* block
-  comment */
-  location: &#x27;somewhere&#x27;
+resource avcsdd <span class="hljs-string">&#x27;Microsoft.Cache/redis@2020-06-01&#x27;</span> = { <span class="hljs-comment">// line comment</span>
+  name: <span class="hljs-string">&#x27;def&#x27;</span> <span class="hljs-comment">/* block
+  comment */</span>
+  location: <span class="hljs-string">&#x27;somewhere&#x27;</span>
   properties: {
     sku: {
-      capacity: <span class="hljs-number">123</span>
-      family: &#x27;C&#x27;
-      name: &#x27;Basic&#x27;
+      capacity: 123
+      family: <span class="hljs-string">&#x27;C&#x27;</span>
+      name: <span class="hljs-string">&#x27;Basic&#x27;</span>
     }
   }
 }
 
 var secretsObject = {
   secrets: [
-    &#x27;abc&#x27;
-    &#x27;def&#x27;
+    <span class="hljs-string">&#x27;abc&#x27;</span>
+    <span class="hljs-string">&#x27;def&#x27;</span>
   ]
 }
 
-var parent = &#x27;abc&#x27;
+var parent = <span class="hljs-string">&#x27;abc&#x27;</span>
 
-resource secrets0 &#x27;Microsoft.KeyVault/vaults/secrets@<span class="hljs-number">2018</span>-<span class="hljs-number">02</span>-<span class="hljs-number">14</span>&#x27; = {
-  name: &#x27;${parent}/child&#x27;
+resource secrets0 <span class="hljs-string">&#x27;Microsoft.KeyVault/vaults/secrets@2018-02-14&#x27;</span> = {
+  name: <span class="hljs-string">&#x27;<span class="hljs-subst">${parent}</span>/child&#x27;</span>
   properties: {
     attributes:  {
       enabled: true
     }
   }
 }
-resource secrets1 &#x27;Microsoft.KeyVault/vaults/secrets@<span class="hljs-number">2018</span>-<span class="hljs-number">02</span>-<span class="hljs-number">14</span>&#x27; = if (secrets0.id == &#x27;&#x27;) {
-  name: &#x27;${parent}/child1&#x27;
+resource secrets1 <span class="hljs-string">&#x27;Microsoft.KeyVault/vaults/secrets@2018-02-14&#x27;</span> = if (secrets0.id == <span class="hljs-string">&#x27;&#x27;</span>) {
+  name: <span class="hljs-string">&#x27;<span class="hljs-subst">${parent}</span>/child1&#x27;</span>
   properties: {
   }
 }
 
-resource secrets2 &#x27;Microsoft.KeyVault/vaults/secrets@<span class="hljs-number">2018</span>-<span class="hljs-number">02</span>-<span class="hljs-number">14</span>&#x27; = [for secret in secretsObject.secrets: {
-  name: &#x27;asdfsd/forloop&#x27;
+resource secrets2 <span class="hljs-string">&#x27;Microsoft.KeyVault/vaults/secrets@2018-02-14&#x27;</span> = [for secret in secretsObject.secrets: {
+  name: <span class="hljs-string">&#x27;asdfsd/forloop&#x27;</span>
   properties: {}
 }]
 
-resource secrets3 &#x27;Microsoft.KeyVault/vaults/secrets@<span class="hljs-number">2018</span>-<span class="hljs-number">02</span>-<span class="hljs-number">14</span>&#x27; = [for secret in secretsObject.secrets: {
-  name: &#x27;jk${true}asdf${<span class="hljs-number">23</span>}.\${SDF${secretsObject[&#x27;secrets&#x27;][<span class="hljs-number">1</span>]}&#x27;
+resource secrets3 <span class="hljs-string">&#x27;Microsoft.KeyVault/vaults/secrets@2018-02-14&#x27;</span> = [for secret in secretsObject.secrets: {
+  name: <span class="hljs-string">&#x27;jk<span class="hljs-subst">${true}</span>asdf<span class="hljs-subst">${23}</span>.\${SDF<span class="hljs-subst">${secretsObject[<span class="hljs-string">&#x27;secrets&#x27;</span>][1]}</span>&#x27;</span>
   properties: {
   }
 }]
 
-resource secrets4 &#x27;Microsoft.KeyVault/vaults/secrets@<span class="hljs-number">2018</span>-<span class="hljs-number">02</span>-<span class="hljs-number">14</span>&#x27; = [for secret in secretsObject.secrets: if (true) {
-  &#x27;name&#x27;: &#x27;test&#x27;
+resource secrets4 <span class="hljs-string">&#x27;Microsoft.KeyVault/vaults/secrets@2018-02-14&#x27;</span> = [for secret in secretsObject.secrets: if (true) {
+  <span class="hljs-string">&#x27;name&#x27;</span>: <span class="hljs-string">&#x27;test&#x27;</span>
   properties:{
   }
 }]
 
-var multi = &#x27;&#x27;&#x27;&#x27;&#x27;&#x27;
-var multi2 = &#x27;&#x27;&#x27;
+var multi = <span class="hljs-string">&#x27;&#x27;</span><span class="hljs-string">&#x27;&#x27;</span><span class="hljs-string">&#x27;&#x27;</span>
+var multi2 = <span class="hljs-string">&#x27;&#x27;</span><span class="hljs-string">&#x27;
       hello!
-&#x27;&#x27;&#x27;
+&#x27;</span><span class="hljs-string">&#x27;&#x27;</span>
 
 var func = resourceGroup().location
-var func2 = reference(&#x27;Microsoft.KeyVault/vaults/secrets&#x27;, func)
+var func2 = reference(<span class="hljs-string">&#x27;Microsoft.KeyVault/vaults/secrets&#x27;</span>, func)
 var func3 = union({
-  &#x27;abc&#x27;: resourceGroup().id
+  <span class="hljs-string">&#x27;abc&#x27;</span>: resourceGroup().id
 }, {
-  &#x27;def&#x27;: &#x27;test&#x27;
+  <span class="hljs-string">&#x27;def&#x27;</span>: <span class="hljs-string">&#x27;test&#x27;</span>
 })
 
 @allowed([
-  &#x27;hello!&#x27;
-  &#x27;hi!&#x27;
+  <span class="hljs-string">&#x27;hello!&#x27;</span>
+  <span class="hljs-string">&#x27;hi!&#x27;</span>
 ])
 @secure()
-param secureParam string = &#x27;hello!&#x27;
+param secureParam string = <span class="hljs-string">&#x27;hello!&#x27;</span>
 
-var emojis = &#x27;💪😊😈🍕☕&#x27;
-var ninjaCat = &#x27;🐱‍👤&#x27;
+var emojis = <span class="hljs-string">&#x27;💪😊😈🍕☕&#x27;</span>
+var ninjaCat = <span class="hljs-string">&#x27;🐱‍👤&#x27;</span>
 
-/* block */
+<span class="hljs-comment">/* block */</span>
 
-/*
+<span class="hljs-comment">/*
 朝辞白帝彩云间
 千里江陵一日还
 两岸猿声啼不住
 轻舟已过万重山
-*/
+*/</span>
 
-// greek letters in comment: Π π Φ φ plus emoji 😎
+<span class="hljs-comment">// greek letters in comment: Π π Φ φ plus emoji 😎</span>
 var variousAlphabets = {
-  &#x27;α&#x27;: &#x27;α&#x27;
-  &#x27;Ωω&#x27;: [
-    &#x27;Θμ&#x27;
+  <span class="hljs-string">&#x27;α&#x27;</span>: <span class="hljs-string">&#x27;α&#x27;</span>
+  <span class="hljs-string">&#x27;Ωω&#x27;</span>: [
+    <span class="hljs-string">&#x27;Θμ&#x27;</span>
   ]
-  &#x27;ążźćłóę&#x27;: &#x27;Cześć!&#x27;
-  &#x27;áéóúñü&#x27;: &#x27;¡Hola!&#x27;
+  <span class="hljs-string">&#x27;ążźćłóę&#x27;</span>: <span class="hljs-string">&#x27;Cześć!&#x27;</span>
+  <span class="hljs-string">&#x27;áéóúñü&#x27;</span>: <span class="hljs-string">&#x27;¡Hola!&#x27;</span>
 
-  &#x27;二头肌&#x27;: &#x27;二头肌&#x27;
+  <span class="hljs-string">&#x27;二头肌&#x27;</span>: <span class="hljs-string">&#x27;二头肌&#x27;</span>
 }
 
-output concatUnicodeStrings string = concat(&#x27;Θμ&#x27;, &#x27;二头肌&#x27;, &#x27;α&#x27;)
-output interpolateUnicodeStrings string = &#x27;Θμ二${emojis}头肌${ninjaCat}α&#x27;
+output concatUnicodeStrings string = concat(<span class="hljs-string">&#x27;Θμ&#x27;</span>, <span class="hljs-string">&#x27;二头肌&#x27;</span>, <span class="hljs-string">&#x27;α&#x27;</span>)
+output interpolateUnicodeStrings string = <span class="hljs-string">&#x27;Θμ二<span class="hljs-subst">${emojis}</span>头肌<span class="hljs-subst">${ninjaCat}</span>α&#x27;</span>
 
-// all of these should produce the same string
-var surrogate_char      = &#x27;𐐷&#x27;
-var surrogate_codepoint = &#x27;\u{<span class="hljs-number">10437</span>}&#x27;
-var surrogate_pairs     = &#x27;\u{D801}\u{DC37}&#x27;
+<span class="hljs-comment">// all of these should produce the same string</span>
+var surrogate_char      = <span class="hljs-string">&#x27;𐐷&#x27;</span>
+var surrogate_codepoint = <span class="hljs-string">&#x27;\u{10437}&#x27;</span>
+var surrogate_pairs     = <span class="hljs-string">&#x27;\u{D801}\u{DC37}&#x27;</span>
 
-// ascii escapes
-var hello = &#x27;❆ Hello\u{<span class="hljs-number">20</span>}World\u{<span class="hljs-number">21</span>} ❁&#x27;
+<span class="hljs-comment">// ascii escapes</span>
+var hello = <span class="hljs-string">&#x27;❆ Hello\u{20}World\u{21} ❁&#x27;</span>
 
     </pre>
   </body>
