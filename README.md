@@ -1,6 +1,7 @@
 # bicep-hljs
 
-** In progress - contributilons welcome **
+**In progress - contributilons welcome**
+
 This is a prototype at adding Bicep support to [highlightJS](https://highlightjs.org/).
 
 ## Code pointers
