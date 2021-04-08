@@ -1,5 +1,8 @@
 # bicep-hljs
 
+** In progress - contributilons welcome **
+This is a prototype at adding Bicep support to [highlightJS](https://highlightjs.org/).
+
 ## Code pointers
 * grammar: [src/bicep.ts](./src/bicep.ts)
 * tests: [test/bicep.test.ts](./test/bicep.test.ts)
