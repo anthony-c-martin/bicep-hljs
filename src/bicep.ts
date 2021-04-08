@@ -1,5 +1,11 @@
 import * as highlight from 'highlight.js';
 
+const bounded = (text: string) => `\\b${text}\\b`;
+const after = (regex: string) => `(?<=${regex})`;
+const notAfter = (regex: string) => `(?<!${regex})`;
+const before = (regex: string) => `(?=${regex})`;
+const notBefore = (regex: string) => `(?!${regex})`;
+
 const COMMENTS = {
   className: "comment",
   variants: [
@@ -12,21 +18,29 @@ const KEYWORDS = {};
 
 const SUBST: Mode = {
   className: 'subst',
-  begin: '\\$\\{',
-  end: '\\}',
+  begin: `${notAfter(`\\\\`)}(\\\${)`,
+  end: `(})`,
   keywords: KEYWORDS,
   contains: [], // defined later
 };
 
+const STRING_VERBATIM: Mode = {
+  className: 'string',
+  begin: `'''`,
+  end: `'''`,
+  contains: []
+}
+
 const STRING: Mode = {
   className: 'string',
-  begin: '\'',
-  end: '\'',
+  begin: `'${notBefore(`''`)}`,
+  end: `'`,
   contains: [
     highlight.BACKSLASH_ESCAPE,
     SUBST,
   ],
 }
+
 const SUBST_INTERNALS = [
   highlight.APOS_STRING_MODE,
   highlight.QUOTE_STRING_MODE,
@@ -36,10 +50,8 @@ const SUBST_INTERNALS = [
 SUBST.contains = [
   ...SUBST_INTERNALS,
   {
-    // we need to pair up {} inside our subst to prevent
-    // it from ending too early by matching another }
-    begin: /\{/,
-    end: /\}/,
+    begin: `\\{`,
+    end: `\\}`,
     keywords: KEYWORDS,
     contains: [
       "self",
@@ -52,15 +64,11 @@ export default function(hljs: typeof highlight): Language {
   return {
     aliases: ['bicep'],
     case_insensitive: true,
-    keywords: {
-      $pattern: /[a-z-]+/,
-      section: 'user-agent',
-      built_in: 'allow disallow',
-      keyword: 'crawl-delay sitemap'
-    },
+    keywords: KEYWORDS,
     contains: [
       COMMENTS,
       STRING,
+      STRING_VERBATIM,
     ],
   }
 }
