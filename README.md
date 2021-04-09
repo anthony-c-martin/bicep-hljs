@@ -9,6 +9,9 @@ This is a prototype at adding Bicep support to [highlightJS](https://highlightjs
 * tests: [test/bicep.test.ts](./test/bicep.test.ts)
 * baselines: [test/baselines](./test/baselines)
 
+## Preview
+Preview the highlighting [here](https://htmlpreview.github.io/?https://github.com/anthony-c-martin/bicep-hljs/blob/main/test/baselines/basic.html).
+
 ## Running
 * Initialize the repo:
     ```sh
