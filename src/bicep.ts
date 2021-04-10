@@ -71,7 +71,6 @@ const stringVerbatim: Mode = {
   className: 'string',
   begin: `'''`,
   end: `'''`,
-  contains: [],
 }
 
 const stringSubstitution: Mode = {
@@ -115,21 +114,21 @@ const objectPropertyKeyIdentifier: Mode = {
 const objectProperty: Mode = {
   begin: `^${notBefore(`${ws}}`)}`,
   end: `$`,
-  contains: [
+  contains: withComments([
     {
-      begin: `^${ws}`,
-      end: `${ws}:`,
+      begin: after(`^${ws}`),
+      end: before(`${ws}:`),
       contains: withComments([
         stringLiteral,
         objectPropertyKeyIdentifier,
       ]),
     },
     {
-      begin: `${after(`:`)}${ws}`,
-      end: `${ws}$`,
+      begin: after(`:${ws}`),
+      end: before(`${ws}$`),
       contains: withComments([expression]),
     },
-  ],
+  ]),
 };
 
 const objectLiteral: Mode = {
