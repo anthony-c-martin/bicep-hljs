@@ -52,6 +52,10 @@ const comments: Mode = {
   variants: [lineComment, blockComment],
 };
 
+function withComments(input: Mode[]): Mode[] {
+  return [...input, comments]
+}
+
 const expression: Mode = {
   keywords: KEYWORDS,
   variants: [
@@ -74,7 +78,7 @@ const stringSubstitution: Mode = {
   className: 'subst',
   begin: `${notAfter(`\\\\`)}(\\\${)`,
   end: `(})`,
-  contains: [expression],
+  contains: withComments([expression]),
 };
 
 const stringLiteral: Mode = {
@@ -115,15 +119,15 @@ const objectProperty: Mode = {
     {
       begin: `^${ws}`,
       end: `${ws}:`,
-      contains: [
+      contains: withComments([
         stringLiteral,
         objectPropertyKeyIdentifier,
-      ],
+      ]),
     },
     {
       begin: `${after(`:`)}${ws}`,
       end: `${ws}$`,
-      contains: [expression],
+      contains: withComments([expression]),
     },
   ],
 };
@@ -131,20 +135,27 @@ const objectProperty: Mode = {
 const objectLiteral: Mode = {
   begin: `{`,
   end: `}`,
-  contains: [objectProperty]
+  contains: withComments([objectProperty]),
 }
 
 const arrayLiteral: Mode = {
-  begin: `\\[${ws}${notBefore(bounded(`for`))}`,
+  begin: `\\[${notBefore(`${ws}${bounded(`for`)}`)}`,
   end: `]`,
-  contains: [expression],
+  contains: withComments([expression]),
 };
 
 const functionCall: Mode = {
   className: 'function',
   begin: `(${identifier})${ws}\\(`,
   end: `\\)`,
-  contains: [expression],
+  contains: withComments([expression]),
+};
+
+const decorator: Mode = {
+  className: 'meta',
+  begin: `@${ws}${before(identifier)}`,
+  end: ``,
+  contains: withComments([functionCall]),
 };
 
 expression.variants = [
@@ -156,6 +167,7 @@ expression.variants = [
   arrayLiteral,
   identifierExpression,
   functionCall,
+  decorator,
 ];
 
 export default function(hljs: typeof highlight): Language {
@@ -163,9 +175,6 @@ export default function(hljs: typeof highlight): Language {
     aliases: ['bicep'],
     case_insensitive: true,
     keywords: KEYWORDS,
-    contains: [
-      comments,
-      expression,
-    ],
+    contains: withComments([expression]),
   }
 }

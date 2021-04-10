@@ -9,9 +9,9 @@
 <span class="hljs-comment">/* test 2 */</span>
 <span class="hljs-variable"><span class="hljs-keyword">targetScope</span></span> = <span class="hljs-string">&#x27;resourceGroup&#x27;</span>
 
-<span class="hljs-variable"><span class="hljs-keyword">resource</span></span> <span class="hljs-variable">avcsdd</span> <span class="hljs-string">&#x27;Microsoft.Cache/redis@2020-06-01&#x27;</span> = { // line comment
-  <span class="hljs-property">name</span>: <span class="hljs-string">&#x27;def&#x27;</span> /* <span class="hljs-variable">block</span>
-  <span class="hljs-property">comment</span> */
+<span class="hljs-variable"><span class="hljs-keyword">resource</span></span> <span class="hljs-variable">avcsdd</span> <span class="hljs-string">&#x27;Microsoft.Cache/redis@2020-06-01&#x27;</span> = { <span class="hljs-comment">// line comment</span>
+  <span class="hljs-property">name</span>: <span class="hljs-string">&#x27;def&#x27;</span> <span class="hljs-comment">/* block
+  comment */</span>
   <span class="hljs-property">location</span>: <span class="hljs-string">&#x27;somewhere&#x27;</span>
   <span class="hljs-property">properties</span>: {
     <span class="hljs-property">sku</span>: {
@@ -75,11 +75,11 @@
   <span class="hljs-string">&#x27;def&#x27;</span>: <span class="hljs-string">&#x27;test&#x27;</span>
 })</span>
 
-@<span class="hljs-function">allowed([
+<span class="hljs-meta">@<span class="hljs-function">allowed([
   <span class="hljs-string">&#x27;hello!&#x27;</span>
   <span class="hljs-string">&#x27;hi!&#x27;</span>
-])</span>
-@<span class="hljs-function">secure()</span>
+])</span></span>
+<span class="hljs-meta">@<span class="hljs-function">secure()</span></span>
 <span class="hljs-variable"><span class="hljs-keyword">param</span></span> <span class="hljs-variable">secureParam</span> <span class="hljs-variable">string</span> = <span class="hljs-string">&#x27;hello!&#x27;</span>
 
 <span class="hljs-variable"><span class="hljs-keyword">var</span></span> <span class="hljs-variable">emojis</span> = <span class="hljs-string">&#x27;💪😊😈🍕☕&#x27;</span>
