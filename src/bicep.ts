@@ -6,58 +6,156 @@ const notAfter = (regex: string) => `(?<!${regex})`;
 const before = (regex: string) => `(?=${regex})`;
 const notBefore = (regex: string) => `(?!${regex})`;
 
-const COMMENTS = {
-  className: "comment",
-  variants: [
-    highlight.C_BLOCK_COMMENT_MODE,
-    highlight.C_LINE_COMMENT_MODE
+const identifierStart = "[_a-zA-Z]";
+const identifierContinue = "[_a-zA-Z0-9]";
+const identifier = bounded(`${identifierStart}${identifierContinue}*`);
+
+// whitespace. ideally we'd tokenize in-line block comments, but that's a lot of work. For now, ignore them.
+const ws = `(?:\\s|/\\*.*\\*/)*`;
+
+const KEYWORDS = {
+  $pattern: '[A-Za-z$_][0-9A-Za-z$_]*',
+  keyword: [
+    'targetScope',
+    'resource',
+    'module',
+    'param',
+    'var',
+    'output',
+    'for',
+    'in',
+    'if',
+  ],
+  literal: [
+    "true",
+    "false",
+    "null",
+  ],
+  built_in: [
+    'az',
+    'sys',
   ]
 };
 
-const KEYWORDS = {};
-
-const SUBST: Mode = {
-  className: 'subst',
-  begin: `${notAfter(`\\\\`)}(\\\${)`,
-  end: `(})`,
-  keywords: KEYWORDS,
-  contains: [], // defined later
+const lineComment: Mode = {
+  className: 'comment',
+  match: `//.*$`,
 };
 
-const STRING_VERBATIM: Mode = {
+const blockComment: Mode = {
+  className: 'comment',
+  begin: `/\\*`,
+  end: `\\*/`,
+};
+
+const comments: Mode = {
+  variants: [lineComment, blockComment],
+};
+
+const expression: Mode = {
+  keywords: KEYWORDS,
+  variants: [
+    /* placeholder filled later due to cycle*/
+  ],
+};
+
+const escapeChar: Mode = {
+  match: `\\\\(u{[0-9A-Fa-f]+}|n|r|t|\\\\|'|\\\${)`,
+};
+
+const stringVerbatim: Mode = {
   className: 'string',
   begin: `'''`,
   end: `'''`,
-  contains: []
+  contains: [],
 }
 
-const STRING: Mode = {
+const stringSubstitution: Mode = {
+  className: 'subst',
+  begin: `${notAfter(`\\\\`)}(\\\${)`,
+  end: `(})`,
+  contains: [expression],
+};
+
+const stringLiteral: Mode = {
   className: 'string',
   begin: `'${notBefore(`''`)}`,
   end: `'`,
   contains: [
-    highlight.BACKSLASH_ESCAPE,
-    SUBST,
+    escapeChar,
+    stringSubstitution
   ],
+};
+
+const numericLiteral: Mode = {
+  className: "number",
+  match: `[0-9]+`,
+};
+
+const namedLiteral: Mode = {
+  className: 'literal',
+  match: bounded(`(true|false|null)`),
+  relevance: 0,
+};
+
+const identifierExpression: Mode = {
+  className: "variable",
+  match: `${identifier}${notBefore(`${ws}\\(`)}`,
+};
+
+const objectPropertyKeyIdentifier: Mode = {
+  className: "property",
+  match: `(${identifier})`,
+};
+
+const objectProperty: Mode = {
+  begin: `^${notBefore(`${ws}}`)}`,
+  end: `$`,
+  contains: [
+    {
+      begin: `^${ws}`,
+      end: `${ws}:`,
+      contains: [
+        stringLiteral,
+        objectPropertyKeyIdentifier,
+      ],
+    },
+    {
+      begin: `${after(`:`)}${ws}`,
+      end: `${ws}$`,
+      contains: [expression],
+    },
+  ],
+};
+
+const objectLiteral: Mode = {
+  begin: `{`,
+  end: `}`,
+  contains: [objectProperty]
 }
 
-const SUBST_INTERNALS = [
-  highlight.APOS_STRING_MODE,
-  highlight.QUOTE_STRING_MODE,
-  STRING,
-];
+const arrayLiteral: Mode = {
+  begin: `\\[${ws}${notBefore(bounded(`for`))}`,
+  end: `]`,
+  contains: [expression],
+};
 
-SUBST.contains = [
-  ...SUBST_INTERNALS,
-  {
-    begin: `\\{`,
-    end: `\\}`,
-    keywords: KEYWORDS,
-    contains: [
-      "self",
-      ...SUBST_INTERNALS
-    ],
-  }
+const functionCall: Mode = {
+  className: 'function',
+  begin: `(${identifier})${ws}\\(`,
+  end: `\\)`,
+  contains: [expression],
+};
+
+expression.variants = [
+  stringLiteral,
+  stringVerbatim,
+  numericLiteral,
+  namedLiteral,
+  objectLiteral,
+  arrayLiteral,
+  identifierExpression,
+  functionCall,
 ];
 
 export default function(hljs: typeof highlight): Language {
@@ -66,9 +164,8 @@ export default function(hljs: typeof highlight): Language {
     case_insensitive: true,
     keywords: KEYWORDS,
     contains: [
-      COMMENTS,
-      STRING,
-      STRING_VERBATIM,
+      comments,
+      expression,
     ],
   }
 }
