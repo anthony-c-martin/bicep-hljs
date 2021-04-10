@@ -169,7 +169,7 @@ expression.variants = [
   decorator,
 ];
 
-export default function(hljs: typeof highlight): Language {
+export default function(hljs: typeof highlight | undefined): Language {
   return {
     aliases: ['bicep'],
     case_insensitive: true,

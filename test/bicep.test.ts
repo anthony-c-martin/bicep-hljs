@@ -19,7 +19,7 @@ async function writeBaseline(filePath: string) {
     diffBefore = await readFile(baselineFilePath, { encoding: 'utf-8' });
   } catch {} // ignore and create the baseline file anyway
 
-  highlight.registerLanguage('bicep', hljs => bicepLanguage(hljs!));
+  highlight.registerLanguage('bicep', bicepLanguage);
   const result = highlight.highlight(bicepFile, { language: 'bicep' });
   const diffAfter = `
 <html>
